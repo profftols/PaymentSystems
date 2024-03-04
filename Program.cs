@@ -63,24 +63,23 @@ namespace PaymentSystems
             Hash = GetHashSHA1(id.ToString()+ amount.ToString() + secretKey.ToString());
         }
 
+        public string GetPayingLink(string url)
+        {
+            return url + Hash;
+        }
 
-        public string GetHashMD5(string input)
+        private string GetHashMD5(string input)
         {
             var md5 = MD5.Create();
             var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
             return Convert.ToBase64String(hash);
         }
 
-        public string GetHashSHA1(string input)
+        private string GetHashSHA1(string input)
         {
             var sha1 = SHA1.Create();
             var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(input));
             return Convert.ToBase64String(hash);
-        }
-
-        public string GetPayingLink(string url)
-        {
-            return url + Hash;
         }
     }
 }
