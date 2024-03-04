@@ -1,0 +1,6 @@
+C:\Users\proff\RiderProjects\PaymentSystems\PaymentSystems\bin\Debug\PaymentSystems.exe
+C:\Users\proff\RiderProjects\PaymentSystems\PaymentSystems\bin\Debug\PaymentSystems.pdb
+C:\Users\proff\RiderProjects\PaymentSystems\PaymentSystems\obj\Debug\PaymentSystems.csproj.AssemblyReference.cache
+C:\Users\proff\RiderProjects\PaymentSystems\PaymentSystems\obj\Debug\PaymentSystems.csproj.CoreCompileInputs.cache
+C:\Users\proff\RiderProjects\PaymentSystems\PaymentSystems\obj\Debug\PaymentSystems.exe
+C:\Users\proff\RiderProjects\PaymentSystems\PaymentSystems\obj\Debug\PaymentSystems.pdb
