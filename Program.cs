@@ -17,14 +17,26 @@ namespace PaymentSystems
             Order order = new Order(12, 35000);
 
             IPaymentSystem payUrl = new PaymentSystem(order.Id);
-            Console.WriteLine(payUrl.GetPayingLink(PAY_URL));
+            Console.WriteLine(PAY_URL + payUrl.GetPayingLink(order));
 
             IPaymentSystem payUrl2 = new PaymentSystem(order.Id, order.Amount);
-            Console.WriteLine(payUrl2.GetPayingLink(ORDER_URL));
+            Console.WriteLine(ORDER_URL + payUrl2.GetPayingLink(order));
             
             IPaymentSystem payUrl3 = new PaymentSystem(order.Id, order.Amount, _secretKey);
-            Console.WriteLine(payUrl3.GetPayingLink(SYSTEM_URL));
+            Console.WriteLine(SYSTEM_URL + payUrl3.GetPayingLink(order));
         }
+    }
+    
+
+    public interface IPaymentSystem
+    { 
+        string GetPayingLink(Order url);
+    }
+
+    public interface IHashService
+    {
+        string GetHashMD5(string input);
+        string GetHashSHA1(string input);
     }
     
     public class Order
@@ -39,47 +51,48 @@ namespace PaymentSystems
         }
     }
 
-    public interface IPaymentSystem
-    { 
-        string GetPayingLink(string url);
-    }
-
-    public class PaymentSystem : IPaymentSystem
+    public class HashService : IHashService
     {
-        public readonly string Hash;
-        
-        public PaymentSystem(int id)
-        {
-            Hash = GetHashMD5(id.ToString());
-        }
-
-        public PaymentSystem(int id, int amount)
-        {
-            Hash = GetHashMD5(id.ToString()+ amount.ToString());
-        }
-
-        public PaymentSystem(int id, int amount, string secretKey)
-        {
-            Hash = GetHashSHA1(id.ToString()+ amount.ToString() + secretKey.ToString());
-        }
-
-        public string GetPayingLink(string url)
-        {
-            return url + Hash;
-        }
-
-        private string GetHashMD5(string input)
+        public string GetHashMD5(string input)
         {
             var md5 = MD5.Create();
             var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
             return Convert.ToBase64String(hash);
         }
 
-        private string GetHashSHA1(string input)
+        public string GetHashSHA1(string input)
         {
             var sha1 = SHA1.Create();
             var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(input));
             return Convert.ToBase64String(hash);
+        }
+    }
+    
+    public class PaymentSystem : IPaymentSystem
+    {
+        public readonly string Hash;
+        
+        public PaymentSystem(int id)
+        {
+            IHashService hash = new HashService();
+            Hash = hash.GetHashMD5(id.ToString());
+        }
+
+        public PaymentSystem(int id, int amount)
+        {
+            IHashService hash = new HashService();
+            Hash = hash.GetHashMD5(id + amount.ToString());
+        }
+
+        public PaymentSystem(int id, int amount, string secretKey)
+        {
+            IHashService hash = new HashService();
+            Hash = hash.GetHashSHA1(id + amount.ToString() + secretKey);
+        }
+
+        public string GetPayingLink(Order order)
+        {
+            return Hash;
         }
     }
 }
